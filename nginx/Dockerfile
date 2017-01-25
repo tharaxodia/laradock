@@ -6,12 +6,27 @@ ADD nginx.conf /etc/nginx/
 
 ARG PHP_UPSTREAM=php-fpm
 
+ARG PUID=1000
+
 RUN apk update \
     && apk upgrade \
     && apk add --no-cache bash \
-    && adduser -D -H -u 1000 -s /bin/bash www-data \
+    && adduser -D -H -u $PUID -s /bin/bash www-data \
     && rm /etc/nginx/conf.d/default.conf \
     && echo "upstream php-upstream { server ${PHP_UPSTREAM}:9000; }" > /etc/nginx/conf.d/upstream.conf
+
+# install openssl
+RUN apk add --no-cache openssl
+
+# create a folder for the keys
+RUN mkdir /etc/nginx/ssl 2> /dev/null
+
+# generate the keys for your local domain
+RUN openssl genrsa -out "/etc/nginx/ssl/docker.play2pay.me.key" 2048 \
+    && openssl req -new -key "/etc/nginx/ssl/docker.play2pay.me.key" -out "/etc/nginx/ssl/docker.play2pay.me.csr" -subj "/CN=docker.play2pay.me/O=play2pay.me/C=UK" \
+    && openssl x509 -req -days 365 -in "/etc/nginx/ssl/docker.play2pay.me.csr" -signkey "/etc/nginx/ssl/docker.play2pay.me.key" -out "/etc/nginx/ssl/docker.play2pay.me.crt"
+
+COPY sites/*.conf /etc/nginx/sites-available/
 
 CMD ["nginx"]
 
