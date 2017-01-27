@@ -126,30 +126,32 @@ services:
 ### MySQL Container #########################################
 
 #    mysql:
+#        container_name: docker_mysql
 #        build: ./mysql
 #        volumes:
-#            - mysql:/var/lib/mysql
+#            - docker_mysql:/var/lib/mysql
 #        ports:
 #            - "3306:3306"
 #        environment:
 #            MYSQL_DATABASE: homestead
 #            MYSQL_USER: homestead
 #            MYSQL_PASSWORD: secret
-#            MYSQL_ROOT_PASSWORD: root
+#            MYSQL_ROOT_PASSWORD: aabbccddee
 
 ### MariaDB Container #######################################
 
-#    mariadb:
-#        build: ./mariadb
-#        volumes:
-#            - mysql:/var/lib/mysql
-#        ports:
-#            - "3306:3306"
-#        environment:
-#            MYSQL_DATABASE: homestead
-#            MYSQL_USER: homestead
-#            MYSQL_PASSWORD: secret
-#            MYSQL_ROOT_PASSWORD: root
+    mariadb:
+        container_name: docker_mariadb
+        build: ./mariadb
+        volumes:
+            - docker_mariadb:/var/lib/mysql
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: homestead
+            MYSQL_USER: homestead
+            MYSQL_PASSWORD: secret
+            MYSQL_ROOT_PASSWORD: aabbccddee
 
 ### PostgreSQL Container ####################################
 
@@ -291,22 +293,23 @@ services:
 
 ### phpMyAdmin Container ####################################
 
-#    phpmyadmin:
-#        build: ./phpmyadmin
-#        environment:
-#            PMA_ARBITRARY: 1
-#            MYSQL_USER: homestead
-#            MYSQL_PASSWORD: secret
-#            MYSQL_ROOT_PASSWORD: root
-#        volumes:
-#            - phpmyadmin
-#        ports:
-#            - "8080:80"
-#        links:
-#            # for mysql container
+    phpmyadmin:
+        container_name: docker_pma
+        build: ./phpmyadmin
+        environment:
+            PMA_ARBITRARY: 1
+            MYSQL_USER: homestead
+            MYSQL_PASSWORD: secret
+            MYSQL_ROOT_PASSWORD: root
+        volumes:
+            - docker_phpmyadmin:/sessions
+        ports:
+            - "8080:80"
+        links:
+            # for mysql container
 #            - "mysql:db"
-#            # for mariadb container
-#            # - "mariadb:db"
+            # for mariadb container
+             - "mariadb:db"
 
 ### pgAdmin Container #######################################
 
