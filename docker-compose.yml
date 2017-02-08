@@ -58,11 +58,13 @@ services:
                 - INSTALL_OPCACHE=false
                 - INSTALL_AEROSPIKE_EXTENSION=false
                 - CODEIGNITER=false
+                - PUID=1001
             dockerfile: Dockerfile-70
         volumes_from:
             - applications
         expose:
             - "9000"
+            - "8888"
         links:
             - workspace
             - postgres

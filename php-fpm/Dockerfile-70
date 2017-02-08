@@ -194,12 +194,19 @@ RUN if [ ${CODEIGNITER} = true ]; then \
 ADD ./laravel.ini /usr/local/etc/php/conf.d
 ADD ./laravel.pool.conf /usr/local/etc/php-fpm.d/
 
-RUN rm -r /var/lib/apt/lists/*
+ARG PUID=1001
+RUN usermod -u $PUID -s /bin/bash www-data && groupmod -g $PUID www-data
 
-RUN usermod -u 1000 www-data
+#python
+RUN apt-get update;apt-get install -y python3 python3-pip python3-icu icu-devtools libicu-dev libicu52 wget
+RUN pip3 install nltk pythainlp
+
+USER root
 
 WORKDIR /var/www
 
 CMD ["php-fpm"]
 
-EXPOSE 9000
+CMD ["jupyter","notebook","--port=8888", "--no-browser", "--ip=0.0.0.0"]
+
+EXPOSE 9000, 8888
