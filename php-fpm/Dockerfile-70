@@ -207,6 +207,4 @@ WORKDIR /var/www
 
 CMD ["php-fpm"]
 
-CMD ["jupyter","notebook","--port=8888", "--no-browser", "--ip=0.0.0.0"]
-
-EXPOSE 9000 8888
+EXPOSE 9000
