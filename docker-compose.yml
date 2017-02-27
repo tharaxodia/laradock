@@ -22,6 +22,7 @@ services:
             context: ./workspace
             args:
                 - INSTALL_XDEBUG=true
+                - INSTALL_SOAP=false
                 - INSTALL_MONGO=false
                 - INSTALL_NODE=true
                 - INSTALL_YARN=false
@@ -29,6 +30,9 @@ services:
                 - INSTALL_AEROSPIKE_EXTENSION=false
                 - COMPOSER_GLOBAL_INSTALL=false
                 - INSTALL_WORKSPACE_SSH=false
+                - INSTALL_LARAVEL_ENVOY=false
+                - INSTALL_DEPLOYER=false
+                - INSTALL_LINUXBREW=false
                 - PUID=1000
                 - PGID=1000
                 - NODE_VERSION=stable
@@ -54,8 +58,10 @@ services:
                 - INSTALL_XDEBUG=true
                 - INSTALL_MONGO=false
                 - INSTALL_ZIP_ARCHIVE=true
+                - INSTALL_PHPREDIS=false
                 - INSTALL_MEMCACHED=true
                 - INSTALL_OPCACHE=false
+                - INSTALL_EXIF=false
                 - INSTALL_AEROSPIKE_EXTENSION=false
                 - CODEIGNITER=false
                 - PUID=1001
@@ -130,15 +136,15 @@ services:
 #    mysql:
 #        container_name: docker_mysql
 #        build: ./mysql
-#        volumes:
+            #        volumes:
 #            - docker_mysql:/var/lib/mysql
-#        ports:
+            #        ports:
 #            - "3306:3306"
 #        environment:
-#            MYSQL_DATABASE: homestead
-#            MYSQL_USER: homestead
-#            MYSQL_PASSWORD: secret
-#            MYSQL_ROOT_PASSWORD: aabbccddee
+                # MYSQL_DATABASE:homestead
+                # MYSQL_USER:homestead
+                # MYSQL_PASSWORD:secret
+                # MYSQL_ROOT_PASSWORD: aabbccddee
 
 ### MariaDB Container #######################################
 
@@ -146,7 +152,7 @@ services:
         container_name: docker_mariadb
         build: ./mariadb
         volumes:
-            - docker_mariadb:/var/lib/mysql
+            - mariadb:/var/lib/mysql
         ports:
             - "3306:3306"
         environment:
@@ -196,13 +202,14 @@ services:
 
 ### MongoDB Container #######################################
 
-    # mongo:
+    #mongo:
     #     container_name: docker_mongo
-    #     build: ./mongo
-    #     ports:
-    #         - "27017:27017"
-    #     volumes:
-    #         - docker_mongo:/data/db
+    #    build: ./mongo
+    #    ports:
+    #        - "27017:27017"
+    #    volumes:
+    #        - docker_mongo:/data/db
+
 
 ### Redis Container #########################################
 
@@ -279,17 +286,16 @@ services:
 
 #    caddy:
 #        build: ./caddy
-#        volumes_from:
-#            - applications
-#        volumes:
-#            - caddy:/root/.caddy
 #        ports:
 #            - "80:80"
 #            - "443:443"
 #            - "2015:2015"
+#        volumes_from:
+#            - applications
 #        volumes:
 #            - ./caddy/Caddyfile:/etc/Caddyfile
 #            - ./logs/caddy:/var/log/caddy
+#            - caddy:/root/.caddy
 #        links:
 #            - php-fpm
 

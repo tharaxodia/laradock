@@ -47,6 +47,23 @@ ARG PGID=1000
 RUN groupadd -g $PGID laradock && \
     useradd -u $PUID -g laradock -m laradock
 
+
+#####################################
+# SOAP:
+#####################################
+USER root
+
+ARG INSTALL_SOAP=false
+ENV INSTALL_SOAP ${INSTALL_SOAP}
+
+RUN if [ ${INSTALL_SOAP} = true ]; then \
+  # Install the PHP SOAP extension
+  apt-get -y update && \
+  add-apt-repository -y ppa:ondrej/php && \
+  apt-get -y install libxml2-dev php7.0-soap && \
+  echo "extension=soap.so" >> /etc/php/7.0/cli/conf.d/40-soap.ini \
+;fi
+
 #####################################
 # Set Timezone
 #####################################
@@ -74,6 +91,10 @@ RUN if [ ${COMPOSER_GLOBAL_INSTALL} = true ]; then \
     composer global install \
 ;fi
 
+# Export composer vendor path
+RUN echo "" >> ~/.bashrc && \
+echo 'export PATH="~/.composer/vendor/bin:$PATH"' >> ~/.bashrc
+
 #####################################
 # Crontab
 #####################################
@@ -85,13 +106,19 @@ RUN chmod -R 644 /etc/cron.d
 #####################################
 # User Aliases
 #####################################
-USER root
 
+USER laradock
 COPY ./aliases.sh /home/laradock/aliases.sh
-RUN echo "" >> ~/.bashrc
-RUN echo "# Load Custom Aliases" >> ~/.bashrc
-RUN echo "source /home/laradock/aliases.sh" >> ~/.bashrc
-RUN echo "" >> ~/.bashrc
+RUN echo "" >> ~/.bashrc && \
+    echo "# Load Custom Aliases" >> ~/.bashrc && \
+    echo "source /home/laradock/aliases.sh" >> ~/.bashrc && \
+    echo "" >> ~/.bashrc
+
+USER root
+RUN echo "" >> ~/.bashrc && \
+    echo "# Load Custom Aliases" >> ~/.bashrc && \
+    echo "source /home/laradock/aliases.sh" >> ~/.bashrc && \
+    echo "" >> ~/.bashrc
 
 #####################################
 # xDebug:
@@ -298,9 +325,53 @@ ENV INSTALL_LARAVEL_ENVOY ${INSTALL_LARAVEL_ENVOY}
 
 RUN if [ ${INSTALL_LARAVEL_ENVOY} = true ]; then \
     # Install the Laravel Envoy
+    composer global require "laravel/envoy=~1.0" \
+;fi
+
+#####################################
+# Deployer:
+#####################################
+USER laradock
+
+ARG INSTALL_DEPLOYER=false
+ENV INSTALL_DEPLOYER ${INSTALL_DEPLOYER}
+
+RUN if [ ${INSTALL_DEPLOYER} = true ]; then \
+    # Install the Deployer
+    composer global require "deployer/deployer" \
+;fi
+
+#####################################
+# Linuxbrew:
+#####################################
+USER root
+
+ARG INSTALL_LINUXBREW=true
+ENV INSTALL_LINUXBREW ${INSTALL_LINUXBREW}
+
+RUN if [ ${INSTALL_LINUXBREW} = true ]; then \
+
+    # Preparation
+    apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y build-essential make cmake scons curl git \
+      ruby autoconf automake autoconf-archive \
+      gettext libtool flex bison \
+      libbz2-dev libcurl4-openssl-dev \
+      libexpat-dev libncurses-dev && \
+
+    # Install the Linuxbrew
+    git clone https://github.com/Homebrew/linuxbrew.git ~/.linuxbrew && \
+
     echo "" >> ~/.bashrc && \
-    echo 'export PATH="~/.composer/vendor/bin:$PATH"' >> ~/.bashrc \
-    && composer global require "laravel/envoy=~1.0" \
+    echo 'export PKG_CONFIG_PATH"=/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/lib64/pkgconfig:/usr/share/pkgconfig:$PKG_CONFIG_PATH"' >> ~/.bashrc && \
+
+    # Setup linuxbrew
+    echo 'export LINUXBREWHOME="$HOME/.linuxbrew"' >> ~/.bashrc && \
+    echo 'export PATH="$LINUXBREWHOME/bin:$PATH"' >> ~/.bashrc && \
+    echo 'export MANPATH="$LINUXBREWHOME/man:$MANPATH"' >> ~/.bashrc && \
+    echo 'export PKG_CONFIG_PATH="$LINUXBREWHOME/lib64/pkgconfig:$LINUXBREWHOME/lib/pkgconfig:$PKG_CONFIG_PATH"' >> ~/.bashrc && \
+    echo 'export LD_LIBRARY_PATH="$LINUXBREWHOME/lib64:$LINUXBREWHOME/lib:$LD_LIBRARY_PATH"' >> ~/.bashrc \
 ;fi
 
 #####################################
