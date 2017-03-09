@@ -1,0 +1,11 @@
+numpy
+scipy
+nltk
+PyICU
+pythainlp
+pandas
+Django
+psycopg2
+djangorestframework
+markdown
+django-filter
