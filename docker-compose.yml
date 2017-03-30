@@ -99,6 +99,7 @@ services:
             - "443:443"
         links:
             - php-fpm
+            - django
 
         stdin_open: true
         tty: true
@@ -363,17 +364,35 @@ services:
     django:
         container_name: docker_django
         build: ./django
-        command: python manage.py runserver 0.0.0.0:8000
+        command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
         volumes:
-          - ~/ai-service:/code
+            - ~/ai-service:/opt/src
+        env_file: .env
+        environment:
+            DEBUG: 'true'
         ports:
-          - "8000:8000"
-        depends_on:
-          - postgres
+            - "8000:8000"
+        links:
+            - postgres:postgres
+            - redis:redis
+
+### Oracle Container #################################
+#     oracle:
+#         container_name: docker_oracle
+#         image: wnameless/oracle-xe-11g
+# #        volumes:
+# #          - docker_oracle:/
+#         environment:
+#             ORACLE_ALLOW_REMOTE: 1
+#         ports:
+#           - "49160:22"
+#           - "1521:1521"
 
 ### Volumes Setup ###########################################
 
 volumes:
+    docker_oracle:
+        driver: "local"
     docker_mysql:
         driver: "local"
     docker_postgres:
