@@ -1,4 +1,3 @@
-gunicorn
 numpy
 scipy
 nltk
@@ -6,7 +5,7 @@ PyICU
 pythainlp
 pandas
 configparser
-Django
+Django==1.10.6
 psycopg2
 markdown
 boto3
@@ -28,3 +27,5 @@ Sphinx
 elasticsearch
 CMRESHandler
 Pillow
+django_cron
+regex
