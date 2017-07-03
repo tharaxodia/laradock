@@ -16,18 +16,19 @@ RUN pip3 install --upgrade pip
 # RUN apt-get install -y python3 python3-pip python3-icu icu-devtools libicu-dev libicu55 wget sudo
 RUN pip3 install nltk pythainlp
 RUN pip3 install gunicorn
+RUN pip3 install numpy
+RUN pip3 install scipy
+RUN pip3 install pandas
 
 ENV PYTHONUNBUFFERED 1
 RUN mkdir /config
 ADD requirements.pip /config/
 
+RUN pip3 install -r /config/requirements.pip
+
 RUN mkdir /opt/src && chown www-data:www-data /opt/src -R
 RUN mkdir -p /var/www && chown www-data:www-data /var/www -R
 
 USER www-data
-
-RUN pip3 install -r /config/requirements.pip
-
-
 
 WORKDIR /opt/src
