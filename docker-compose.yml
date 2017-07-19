@@ -190,22 +190,22 @@ services:
 
 ### MySQL Container #########################################
 
-    # mysql:
-    #   build:
-    #     context: ./mysql
-    #   environment:
-    #     - MYSQL_DATABASE=${MYSQL_DATABASE}
-    #     - MYSQL_USER=${MYSQL_USER}
-    #     - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-    #     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-    #     - TZ=${WORKSPACE_TIMEZONE}
-    #   volumes:
-    #     - ${DATA_SAVE_PATH}/mysql:/var/lib/mysql
-    #     - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-    #   ports:
-    #     - "${MYSQL_PORT}:3306"
-    #   networks:
-    #     - backend
+    mysql:
+       build:
+         context: ./mysql
+       environment:
+         - MYSQL_DATABASE=${MYSQL_DATABASE}
+         - MYSQL_USER=${MYSQL_USER}
+         - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+         - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+         - TZ=${WORKSPACE_TIMEZONE}
+       volumes:
+         - ${DATA_SAVE_PATH}/mysql:/var/lib/mysql
+         - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+       ports:
+         - "${MYSQL_PORT}:3306"
+       networks:
+         - backend
 
 ### Percona Container #########################################
 
@@ -474,6 +474,9 @@ services:
       volumes:
         - elasticsearch-data:/usr/share/elasticsearch/data
         - elasticsearch-plugins:/usr/share/elasticsearch/plugins
+      environment:
+        - xpack.security.enabled=false
+        - XPACK_SECURITY_ENABLED=false
       ports:
         - "${ELASTICSEARCH_HOST_HTTP_PORT}:9200"
         - "${ELASTICSEARCH_HOST_TRANSPORT_PORT}:9300"
@@ -488,6 +491,9 @@ services:
 
     kibana:
       build: ./kibana
+      environment:
+        - xpack.security.enabled=false
+        - XPACK_SECURITY_ENABLED=false
       ports:
         - "${KIBANA_HTTP_PORT}:5601"
       depends_on:

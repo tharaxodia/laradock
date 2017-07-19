@@ -23,10 +23,10 @@ ENV PYTHONUNBUFFERED 1
 RUN mkdir /config
 ADD requirements.pip /config/
 
+RUN pip3 install -r /config/requirements.pip
+
 RUN mkdir /opt/src && chown www-data:www-data /opt/src -R
 RUN mkdir -p /var/www && chown www-data:www-data /var/www -R
-
-RUN pip3 install -r /config/requirements.pip
 
 USER www-data
 
