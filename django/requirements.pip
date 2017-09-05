@@ -2,10 +2,11 @@ numpy
 scipy
 nltk
 PyICU
+dill
 pythainlp
 pandas
 configparser
-Django
+Django==1.10.6
 psycopg2
 markdown
 boto3
@@ -30,3 +31,5 @@ Pillow
 django_cron
 regex
 scikit-learn
+fastcache
+
