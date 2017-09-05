@@ -282,6 +282,17 @@ RUN if [ ${INSTALL_MSSQL} = true ]; then \
         && docker-php-ext-enable pdo_sqlsrv sqlsrv \
 ;fi
 
+#####################################
+# Image optimizers:
+#####################################
+USER root
+ARG INSTALL_IMAGE_OPTIMIZERS=false
+ENV INSTALL_IMAGE_OPTIMIZERS ${INSTALL_IMAGE_OPTIMIZERS}
+RUN if [ ${INSTALL_IMAGE_OPTIMIZERS} = true ]; then \
+    apt-get update -yqq && \
+    apt-get install -y --force-yes jpegoptim optipng pngquant gifsicle \
+;fi
+
 #
 #--------------------------------------------------------------------------
 # Final Touch
@@ -292,16 +303,8 @@ ADD ./laravel.ini /usr/local/etc/php/conf.d/
 ADD ./laravel.pool.conf /usr/local/etc/php-fpm.d/
 
 #RUN rm -r /var/lib/apt/lists/*
-ARG PUID=1001
-RUN usermod -u $PUID -s /bin/bash www-data && groupmod -g $PUID www-data
 
-#python
-RUN apt-get update
-
-RUN apt-get install -y python3 python3-pip python3-icu icu-devtools libicu-dev libicu52 wget
-RUN pip3 install nltk pythainlp numpy pandas
-
-USER root
+RUN usermod -u 1000 www-data
 
 WORKDIR /var/www
 

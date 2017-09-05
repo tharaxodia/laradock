@@ -117,9 +117,10 @@ COPY ./aliases.sh /home/laradock/aliases.sh
 RUN echo "" >> ~/.bashrc && \
     echo "# Load Custom Aliases" >> ~/.bashrc && \
     echo "source /home/laradock/aliases.sh" >> ~/.bashrc && \
-    echo "" >> ~/.bashrc&& \
-    sed -i 's/\r//' /home/laradock/aliases.sh && \
+	echo "" >> ~/.bashrc && \
+	sed -i 's/\r//' /home/laradock/aliases.sh && \
 	sed -i 's/^#! \/bin\/sh/#! \/bin\/bash/' /home/laradock/aliases.sh
+
 USER root
 RUN echo "" >> ~/.bashrc && \
     echo "# Load Custom Aliases" >> ~/.bashrc && \
@@ -201,6 +202,8 @@ ENV DRUSH_VERSION 8.1.2
 ARG INSTALL_DRUSH=false
 ENV INSTALL_DRUSH ${INSTALL_DRUSH}
 RUN if [ ${INSTALL_DRUSH} = true ]; then \
+    apt-get update -yqq && \
+    apt-get -y install mysql-client && \
     # Install Drush 8 with the phar file.
     curl -fsSL -o /usr/local/bin/drush https://github.com/drush-ops/drush/releases/download/$DRUSH_VERSION/drush.phar | bash && \
     chmod +x /usr/local/bin/drush && \
@@ -317,14 +320,6 @@ RUN echo "" >> ~/.bashrc && \
     echo 'export PATH="/var/www/vendor/bin:$PATH"' >> ~/.bashrc
 
 #####################################
-# Laravel Artisan Alias
-#####################################
-USER root
-
-RUN echo "" >> ~/.bashrc && \
-    echo 'alias art="php artisan"' >> ~/.bashrc
-
-#####################################
 # Laravel Envoy:
 #####################################
 USER laradock
@@ -424,61 +419,55 @@ RUN if [ ${INSTALL_MC} = true ]; then\
     chmod +x /usr/local/bin/mc \
 ;fi
 
+#####################################
+# Image optimizers:
+#####################################
+USER root
+ARG INSTALL_IMAGE_OPTIMIZERS=false
+ENV INSTALL_IMAGE_OPTIMIZERS ${INSTALL_IMAGE_OPTIMIZERS}
+RUN if [ ${INSTALL_IMAGE_OPTIMIZERS} = true ]; then \
+    apt-get install -y --force-yes jpegoptim optipng pngquant gifsicle && \
+    if [ ${INSTALL_NODE} = true ]; then \
+        . ~/.bashrc && npm install -g svgo \
+    ;fi\
+;fi
+
 USER laradock
 
 #####################################
-# Linuxbrew:
+# Symfony:
 #####################################
 USER root
+ARG INSTALL_SYMFONY=false
+ENV INSTALL_SYMFONY ${INSTALL_SYMFONY}
+RUN if [ ${INSTALL_SYMFONY} = true ]; then \
 
-ARG INSTALL_LINUXBREW=true
-ENV INSTALL_LINUXBREW ${INSTALL_LINUXBREW}
+  mkdir -p /usr/local/bin \
+  && curl -LsS https://symfony.com/installer -o /usr/local/bin/symfony \
+  && chmod a+x /usr/local/bin/symfony \
 
-RUN if [ ${INSTALL_LINUXBREW} = true ]; then \
+  #  Symfony 3 alias
+  && echo 'alias dev="php bin/console -e=dev"' >> ~/.bashrc \
+  && echo 'alias prod="php bin/console -e=prod"' >> ~/.bashrc \
 
-    # Preparation
-    apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y build-essential make cmake scons curl git \
-      ruby autoconf automake autoconf-archive \
-      gettext libtool flex bison \
-      libbz2-dev libcurl4-openssl-dev \
-      libexpat-dev libncurses-dev && \
+  #  Symfony 2 alias
+  #  && echo 'alias dev="php app/console -e=dev"' >> ~/.bashrc \
+  #  && echo 'alias prod="php app/console -e=prod"' >> ~/.bashrc \
 
-    # Install the Linuxbrew
-    git clone https://github.com/Homebrew/linuxbrew.git ~/.linuxbrew && \
-
-    echo "" >> ~/.bashrc && \
-    echo 'export PKG_CONFIG_PATH"=/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/lib64/pkgconfig:/usr/share/pkgconfig:$PKG_CONFIG_PATH"' >> ~/.bashrc && \
-
-    # Setup linuxbrew
-    echo 'export LINUXBREWHOME="$HOME/.linuxbrew"' >> ~/.bashrc && \
-    echo 'export PATH="$LINUXBREWHOME/bin:$PATH"' >> ~/.bashrc && \
-    echo 'export MANPATH="$LINUXBREWHOME/man:$MANPATH"' >> ~/.bashrc && \
-    echo 'export PKG_CONFIG_PATH="$LINUXBREWHOME/lib64/pkgconfig:$LINUXBREWHOME/lib/pkgconfig:$PKG_CONFIG_PATH"' >> ~/.bashrc && \
-    echo 'export LD_LIBRARY_PATH="$LINUXBREWHOME/lib64:$LINUXBREWHOME/lib:$LD_LIBRARY_PATH"' >> ~/.bashrc \
 ;fi
 
-#
-#--------------------------------------------------------------------------
-# Supervisor
-#--------------------------------------------------------------------------
-#
-USER root
+#####################################
+# PYTHON:
+#####################################
 
-RUN apt-get update && apt-get install supervisor -y
-COPY ./supervisor_conf.d /etc/supervisor/conf.d
-
-ARG RUN_SUPERVISOR=true
-ENV RUN_SUPERVISOR ${RUN_SUPERVISOR}
-ADD supervisor.sh /tmp
-RUN if [ ${RUN_SUPERVISOR} = true ]; then \
-    mkdir -p /etc/service/supervisor/ \
-    && cp /tmp/supervisor.sh /etc/service/supervisor/run \
-    && chmod +x /etc/service/supervisor/run \
+ARG INSTALL_PYTHON=false
+ENV INSTALL_PYTHON ${INSTALL_PYTHON}
+RUN if [ ${INSTALL_PYTHON} = true ]; then \
+  apt-get update \
+  && apt-get -y install python python-pip python-dev build-essential  \
+  && pip install --upgrade pip  \
+  && pip install --upgrade virtualenv \
 ;fi
-
-RUN service supervisor start
 
 #
 #--------------------------------------------------------------------------

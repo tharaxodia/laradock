@@ -1,7 +1,2 @@
 *.conf
 !default.conf
-!/backend-ui.conf
-!/jmt-backend.conf
-!/message-management.conf
-!/central-line.conf
-!/fbpage.conf
