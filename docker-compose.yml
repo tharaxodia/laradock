@@ -238,19 +238,19 @@ services:
 
 ### MSSQL Container #########################################
 
-#    mssql:
-#      build:
-#        context: ./mssql
-#      environment:
-#        - MSSQL_DATABASE=${MSSQL_DATABASE}
-#        - SA_PASSWORD=${MSSQL_PASSWORD}
-#        - ACCEPT_EULA=Y
-#      volumes:
-#        - ${DATA_SAVE_PATH}/mssql:/var/opt/mssql
-#      ports:
-#        - "${MSSQL_PORT}:1433"
-#      networks:
-#        - backend
+    mssql:
+      build:
+        context: ./mssql
+      environment:
+        - MSSQL_DATABASE=${MSSQL_DATABASE}
+        - SA_PASSWORD=${MSSQL_PASSWORD}
+        - ACCEPT_EULA=Y
+      volumes:
+        - ${DATA_SAVE_PATH}/mssql:/var/opt/mssql
+      ports:
+        - "${MSSQL_PORT}:1433"
+      networks:
+        - backend
 
 ### MariaDB Container #######################################
 
@@ -389,20 +389,20 @@ services:
 
 ### RabbitMQ Container ######################################
 
-#    rabbitmq:
-#      build: ./rabbitmq
-#      ports:
-#        - "${RABBITMQ_NODE_HOST_PORT}:5672"
-#        - "${RABBITMQ_MANAGEMENT_HTTP_HOST_PORT}:15672"
-#        - "${RABBITMQ_MANAGEMENT_HTTPS_HOST_PORT}:15671"
-#      privileged: true
-#      environment:
-#        - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
-#        - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
-#      depends_on:
-#        - php-fpm
-#      networks:
-#        - backend
+    rabbitmq:
+      build: ./rabbitmq
+      ports:
+        - "${RABBITMQ_NODE_HOST_PORT}:5672"
+        - "${RABBITMQ_MANAGEMENT_HTTP_HOST_PORT}:15672"
+        - "${RABBITMQ_MANAGEMENT_HTTPS_HOST_PORT}:15671"
+      privileged: true
+      environment:
+        - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+        - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      depends_on:
+        - php-fpm
+      networks:
+        - backend
 
 ### Beanstalkd Console Container ############################
 
@@ -492,6 +492,7 @@ services:
         - cluster.name=laradock-cluster
         - bootstrap.memory_lock=true
         - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+        - xpack.security.enabled=false
       ulimits:
         memlock:
           soft: -1
