@@ -637,6 +637,24 @@ services:
     #     - frontend
     #     - backend
 
+### Django Container #################################
+    django:
+        build: ./django
+        command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+        volumes:
+            - ~/ai-service:/opt/src
+        env_file: .env
+        environment:
+            DEBUG: 'true'
+        ports:
+            - "8000:8000"
+        links:
+            - postgres
+            - redis
+        networks:
+                - frontend
+                - backend
+
 ### Networks Setup ############################################
 
 networks:

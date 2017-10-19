@@ -2,11 +2,10 @@ numpy
 scipy
 nltk
 PyICU
-dill
 pythainlp
 pandas
 configparser
-Django==1.10.6
+Django
 psycopg2
 markdown
 boto3
@@ -21,6 +20,7 @@ django-angular
 django-environ
 django-adminlte2
 django-jet
+django-ipware
 google-api-python-client==1.4.1
 FeedParser
 django-polymorphic
@@ -32,4 +32,3 @@ django_cron
 regex
 scikit-learn
 fastcache
-
