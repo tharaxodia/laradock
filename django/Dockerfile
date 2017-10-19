@@ -19,6 +19,7 @@ RUN pip3 install gunicorn
 RUN pip3 install numpy
 RUN pip3 install scipy
 RUN pip3 install pandas
+RUN pip3 install dill
 RUN pip3 install scikit-learn
 
 ENV PYTHONUNBUFFERED 1
