@@ -19,6 +19,17 @@ RUN apk update \
 RUN echo "upstream php-upstream { server ${PHP_UPSTREAM_CONTAINER}:${PHP_UPSTREAM_PORT}; }" > /etc/nginx/conf.d/upstream.conf \
     && rm /etc/nginx/conf.d/default.conf
 
+# install openssl
+RUN apk add --no-cache openssl
+
+# create a folder for the keys
+RUN mkdir /etc/nginx/ssl 2> /dev/null
+
+# generate the keys for your local domain
+RUN openssl genrsa -out "/etc/nginx/ssl/bda.local.key" 2048 \
+    && openssl req -new -key "/etc/nginx/ssl/bda.local.key" -out "/etc/nginx/ssl/bda.local.csr" -subj "/CN=bda.local/O=BigDataAgency/C=UK" \
+    && openssl x509 -req -days 365 -in "/etc/nginx/ssl/bda.local.csr" -signkey "/etc/nginx/ssl/bda.local.key" -out "/etc/nginx/ssl/bda.local.crt"
+
 CMD ["nginx"]
 
 EXPOSE 80 443
