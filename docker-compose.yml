@@ -645,15 +645,15 @@ services:
 
 ### Grafana Container #########################################
 
-    grafana:
-      build:
-        context: ./grafana
-      volumes:
-        - ${DATA_SAVE_PATH}/grafana:/var/lib/grafana
-      ports:
-        - "${GRAFANA_PORT}:3000"
-      networks:
-        - backend
+    # grafana:
+    #   build:
+    #     context: ./grafana
+    #   volumes:
+    #     - ${DATA_SAVE_PATH}/grafana:/var/lib/grafana
+    #   ports:
+    #     - "${GRAFANA_PORT}:3000"
+    #   networks:
+    #     - backend
 
 ### Laravel Echo Server #######################################
     # laravel-echo-server:
@@ -688,14 +688,14 @@ services:
                 - backend
 
 ### AWS EB-CLI ####
-    aws:
-      build:
-        context: ./aws
-      volumes_from:
-        - applications
-      depends_on:
-        - workspace
-      tty: true
+    # aws:
+    #   build:
+    #     context: ./aws
+    #   volumes_from:
+    #     - applications
+    #   depends_on:
+    #     - workspace
+    #   tty: true
 
 ### Networks Setup ############################################
 
