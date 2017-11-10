@@ -12,7 +12,7 @@
 # Note: Base Image name format {image-tag}-{php-version}
 #
 
-FROM laradock/workspace:1.8-71
+FROM laradock/workspace:1.9-71
 
 MAINTAINER Mahmoud Zalt <mahmoud@zalt.me>
 
@@ -80,6 +80,18 @@ RUN if [ ${INSTALL_LDAP} = true ]; then \
     apt-get update -yqq && \
     apt-get install -y libldap2-dev && \
     apt-get install -y php7.1-ldap \
+;fi
+
+#####################################
+# IMAP:
+#####################################
+
+ARG INSTALL_IMAP=false
+ENV INSTALL_IMAP ${INSTALL_IMAP}
+
+RUN if [ ${INSTALL_IMAP} = true ]; then \
+    apt-get update -yqq && \
+    apt-get install -y php7.1-imap \
 ;fi
 
 #####################################
