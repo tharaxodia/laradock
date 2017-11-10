@@ -19,6 +19,7 @@ services:
           - INSTALL_BLACKFIRE=${INSTALL_BLACKFIRE}
           - INSTALL_SOAP=${WORKSPACE_INSTALL_SOAP}
           - INSTALL_LDAP=${WORKSPACE_INSTALL_LDAP}
+          - INSTALL_IMAP=${WORKSPACE_INSTALL_IMAP}
           - INSTALL_MONGO=${WORKSPACE_INSTALL_MONGO}
           - INSTALL_PHPREDIS=${WORKSPACE_INSTALL_PHPREDIS}
           - INSTALL_MSSQL=${WORKSPACE_INSTALL_MSSQL}
@@ -112,6 +113,8 @@ services:
       build:
         context: ./php-worker
         dockerfile: "Dockerfile-${PHP_VERSION}"
+        args:
+          - INSTALL_PGSQL=${PHP_WORKER_INSTALL_PGSQL}
       volumes_from:
         - applications
       depends_on:
@@ -645,15 +648,15 @@ services:
 
 ### Grafana Container #########################################
 
-    grafana:
-      build:
-        context: ./grafana
-      volumes:
-        - ${DATA_SAVE_PATH}/grafana:/var/lib/grafana
-      ports:
-        - "${GRAFANA_PORT}:3000"
-      networks:
-        - backend
+    # grafana:
+    #   build:
+    #     context: ./grafana
+    #   volumes:
+    #     - ${DATA_SAVE_PATH}/grafana:/var/lib/grafana
+    #   ports:
+    #     - "${GRAFANA_PORT}:3000"
+    #   networks:
+    #     - backend
 
 ### Laravel Echo Server #######################################
     # laravel-echo-server:
