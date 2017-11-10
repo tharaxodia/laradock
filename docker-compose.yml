@@ -157,7 +157,7 @@ services:
 
 ### Apache Server Container #################################
 
-    # apache2:
+    # apache2:  
     #   build:
     #     context: ./apache2
     #     args:
@@ -477,17 +477,17 @@ services:
 
 ### pgAdmin Container #######################################
 
-#    pgadmin:
-#      build: ./pgadmin
-#      ports:
-#        - "5050:5050"
-#      volumes:
-#        - ${DATA_SAVE_PATH}/pgadmin-backup:/var/lib/pgadmin4/data/storage/pgadmin4
-#      depends_on:
-#        - postgres
-#      networks:
-#        - frontend
-#        - backend
+    pgadmin:
+      build: ./pgadmin
+      ports:
+        - "5050:5050"
+      volumes:
+        - ${DATA_SAVE_PATH}/pgadmin-backup:/var/lib/pgadmin4/data/storage/pgadmin4
+      depends_on:
+        - postgres
+      networks:
+        - frontend
+        - backend
 
 
 ### ElasticSearch Container #################################
@@ -688,14 +688,14 @@ services:
                 - backend
 
 ### AWS EB-CLI ####
-    aws:
-      build:
-        context: ./aws
-      volumes_from:
-        - applications
-      depends_on:
-        - workspace
-      tty: true
+    # aws:
+    #   build:
+    #     context: ./aws
+    #   volumes_from:
+    #     - applications
+    #   depends_on:
+    #     - workspace
+    #   tty: true
 
 ### Networks Setup ############################################
 
