@@ -19,6 +19,7 @@ services:
           - INSTALL_BLACKFIRE=${INSTALL_BLACKFIRE}
           - INSTALL_SOAP=${WORKSPACE_INSTALL_SOAP}
           - INSTALL_LDAP=${WORKSPACE_INSTALL_LDAP}
+          - INSTALL_IMAP=${WORKSPACE_INSTALL_IMAP}
           - INSTALL_MONGO=${WORKSPACE_INSTALL_MONGO}
           - INSTALL_PHPREDIS=${WORKSPACE_INSTALL_PHPREDIS}
           - INSTALL_MSSQL=${WORKSPACE_INSTALL_MSSQL}
@@ -112,6 +113,8 @@ services:
       build:
         context: ./php-worker
         dockerfile: "Dockerfile-${PHP_VERSION}"
+        args:
+          - INSTALL_PGSQL=${PHP_WORKER_INSTALL_PGSQL}
       volumes_from:
         - applications
       depends_on:
@@ -157,7 +160,7 @@ services:
 
 ### Apache Server Container #################################
 
-    # apache2:
+    # apache2:  
     #   build:
     #     context: ./apache2
     #     args:
@@ -477,17 +480,17 @@ services:
 
 ### pgAdmin Container #######################################
 
-#    pgadmin:
-#      build: ./pgadmin
-#      ports:
-#        - "5050:5050"
-#      volumes:
-#        - ${DATA_SAVE_PATH}/pgadmin-backup:/var/lib/pgadmin4/data/storage/pgadmin4
-#      depends_on:
-#        - postgres
-#      networks:
-#        - frontend
-#        - backend
+    pgadmin:
+      build: ./pgadmin
+      ports:
+        - "5050:5050"
+      volumes:
+        - ${DATA_SAVE_PATH}/pgadmin-backup:/var/lib/pgadmin/storage/pgadmin4
+      depends_on:
+        - postgres
+      networks:
+        - frontend
+        - backend
 
 
 ### ElasticSearch Container #################################
@@ -500,13 +503,11 @@ services:
       environment:
         - cluster.name=laradock-cluster
         - bootstrap.memory_lock=true
-        - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
-        - xpack.security.enabled=false
+        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       ulimits:
         memlock:
           soft: -1
           hard: -1
-      mem_limit: 512m
       ports:
         - "${ELASTICSEARCH_HOST_HTTP_PORT}:9200"
         - "${ELASTICSEARCH_HOST_TRANSPORT_PORT}:9300"
