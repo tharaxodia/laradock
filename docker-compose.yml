@@ -685,8 +685,8 @@ services:
             - postgres
             - redis
         networks:
-                - frontend
-                - backend
+          - frontend
+          - backend
 
 ### AWS EB-CLI ####
     # aws:
