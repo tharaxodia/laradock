@@ -5,7 +5,7 @@ PyICU
 pythainlp
 pandas
 configparser
-Django
+Django==1.11.8
 psycopg2
 markdown
 boto3
