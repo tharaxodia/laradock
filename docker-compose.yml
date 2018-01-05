@@ -327,14 +327,14 @@ services:
 
 ### MongoDB Container #######################################
 
-#    mongo:
-#      build: ./mongo
-#      ports:
-#        - "${MONGODB_PORT}:27017"
-#      volumes:
-#        - ${DATA_SAVE_PATH}/mongo:/data/db
-#      networks:
-#        - backend
+    mongo:
+      build: ./mongo
+      ports:
+        - "${MONGODB_PORT}:27017"
+      volumes:
+        - ${DATA_SAVE_PATH}/mongo:/data/db
+      networks:
+        - backend
 
 ### RethinkDB Container #######################################
 
