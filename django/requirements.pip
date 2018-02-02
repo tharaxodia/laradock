@@ -36,3 +36,4 @@ matplotlib
 mpld3
 seaborn
 statsmodels
+django-braces
