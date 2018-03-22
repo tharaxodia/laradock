@@ -1,7 +1,7 @@
 numpy
 scipy
 nltk
-PyICU
+PyICU==1.9.8
 pythainlp
 pandas
 configparser
@@ -14,7 +14,7 @@ redis
 Faker
 django-filter
 django-grappelli
-djangorestframework
+djangorestframework==3.7.7
 django-mptt
 django-angular
 django-environ
@@ -36,4 +36,4 @@ matplotlib
 mpld3
 seaborn
 statsmodels
-django-braces
+django-cors-headers

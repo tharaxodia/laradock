@@ -21,8 +21,8 @@ RUN apk --update add wget \
   libgsasl-dev \
   supervisor
 
-RUN docker-php-ext-install mysqli mbstring pdo pdo_mysql mcrypt tokenizer xml
-RUN pecl channel-update pecl.php.net && pecl install memcached && docker-php-ext-enable memcached
+RUN docker-php-ext-install mysqli mbstring pdo pdo_mysql mcrypt tokenizer xml pcntl
+RUN pecl channel-update pecl.php.net && pecl install memcached && docker-php-ext-enable memcached && pecl install redis && docker-php-ext-enable redis
 
 # Install PostgreSQL drivers:
 ARG INSTALL_PGSQL=false
