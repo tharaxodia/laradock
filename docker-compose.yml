@@ -200,39 +200,39 @@ services:
     #     - backend
 
 ### Apache Server ########################################
-    apache2:
-      build:
-        context: ./apache2
-        args:
-          - PHP_UPSTREAM_CONTAINER=${APACHE_PHP_UPSTREAM_CONTAINER}
-          - PHP_UPSTREAM_PORT=${APACHE_PHP_UPSTREAM_PORT}
-          - PHP_UPSTREAM_TIMEOUT=${APACHE_PHP_UPSTREAM_TIMEOUT}
-          - DOCUMENT_ROOT=${APACHE_DOCUMENT_ROOT}
-      volumes:
-        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-        - ${APACHE_HOST_LOG_PATH}:/var/log/apache2
-        - ${APACHE_SITES_PATH}:/etc/apache2/sites-available
-      ports:
-        - "${APACHE_HOST_HTTP_PORT}:80"
-        - "${APACHE_HOST_HTTPS_PORT}:443"
-      depends_on:
-        - php-fpm
-      networks:
-        - frontend
-        - backend
+#    apache2:
+#      build:
+#        context: ./apache2
+#        args:
+#          - PHP_UPSTREAM_CONTAINER=${APACHE_PHP_UPSTREAM_CONTAINER}
+#          - PHP_UPSTREAM_PORT=${APACHE_PHP_UPSTREAM_PORT}
+#          - PHP_UPSTREAM_TIMEOUT=${APACHE_PHP_UPSTREAM_TIMEOUT}
+#          - DOCUMENT_ROOT=${APACHE_DOCUMENT_ROOT}
+#      volumes:
+#        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+#        - ${APACHE_HOST_LOG_PATH}:/var/log/apache2
+#        - ${APACHE_SITES_PATH}:/etc/apache2/sites-available
+#      ports:
+#        - "${APACHE_HOST_HTTP_PORT}:80"
+#        - "${APACHE_HOST_HTTPS_PORT}:443"
+#      depends_on:
+#        - php-fpm
+#      networks:
+#        - frontend
+#        - backend
 
 ### HHVM #################################################
-    hhvm:
-      build: ./hhvm
-      volumes:
-        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-      expose:
-        - "9000"
-      depends_on:
-        - workspace
-      networks:
-        - frontend
-        - backend
+#    hhvm:
+#      build: ./hhvm
+#      volumes:
+#        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+#      expose:
+#        - "9000"
+#      depends_on:
+#        - workspace
+#      networks:
+#        - frontend
+#        - backend
 
 ### Minio ################################################
     # minio:
@@ -390,18 +390,18 @@ services:
         - backend
 
 ### Aerospike ##########################################
-    aerospike:
-      build: ./aerospike
-      volumes:
-        - workspace
-        - ${DATA_PATH_HOST}/aerospike:/opt/aerospike/data
-      ports:
-        - "${AEROSPIKE_SERVICE_PORT}:3000"
-        - "${AEROSPIKE_FABRIC_PORT}:3001"
-        - "${AEROSPIKE_HEARTBEAT_PORT}:3002"
-        - "${AEROSPIKE_INFO_PORT}:3003"
-      networks:
-        - backend
+#    aerospike:
+#      build: ./aerospike
+#      volumes:
+#        - workspace
+#        - ${DATA_PATH_HOST}/aerospike:/opt/aerospike/data
+#      ports:
+#        - "${AEROSPIKE_SERVICE_PORT}:3000"
+#        - "${AEROSPIKE_FABRIC_PORT}:3001"
+#        - "${AEROSPIKE_HEARTBEAT_PORT}:3002"
+#        - "${AEROSPIKE_INFO_PORT}:3003"
+#      networks:
+#        - backend
 
 ### Memcached ############################################
     memcached:
@@ -453,21 +453,21 @@ services:
 #        - backend
 
 ### Caddy Server #########################################
-    caddy:
-      build: ./caddy
-      volumes:
-        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-        - ${CADDY_CUSTOM_CADDYFILE}:/etc/Caddyfile
-        - ${CADDY_HOST_LOG_PATH}:/var/log/caddy
-        - ${DATA_PATH_HOST}:/root/.caddy
-      ports:
-        - "${CADDY_HOST_HTTP_PORT}:80"
-        - "${CADDY_HOST_HTTPS_PORT}:443"
-      depends_on:
-        - php-fpm
-      networks:
-        - frontend
-        - backend
+#    caddy:
+#      build: ./caddy
+#      volumes:
+#        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+#        - ${CADDY_CUSTOM_CADDYFILE}:/etc/Caddyfile
+#        - ${CADDY_HOST_LOG_PATH}:/var/log/caddy
+#        - ${DATA_PATH_HOST}:/root/.caddy
+#      ports:
+#        - "${CADDY_HOST_HTTP_PORT}:80"
+#        - "${CADDY_HOST_HTTPS_PORT}:443"
+#      depends_on:
+#        - php-fpm
+#      networks:
+#        - frontend
+#        - backend
 
 ### phpMyAdmin ###########################################
     # phpmyadmin:
@@ -608,22 +608,22 @@ services:
     #   networks:
     #     - frontend
 
-    proxy2:
-      build: ./varnish
-      expose:
-        - ${VARNISH_PORT}
-      environment:
-        - VARNISH_CONFIG=${VARNISH_CONFIG}
-        - CACHE_SIZE=${VARNISH_PROXY2_CACHE_SIZE}
-        - VARNISHD_PARAMS=${VARNISHD_PARAMS}
-        - VARNISH_PORT=${VARNISH_PORT}
-        - BACKEND_HOST=${VARNISH_PROXY2_BACKEND_HOST}
-        - BACKEND_PORT=${VARNISH_BACKEND_PORT}
-        - VARNISH_SERVER=${VARNISH_PROXY2_SERVER}
-      links:
-        - workspace
-      networks:
-        - frontend
+#    proxy2:
+#      build: ./varnish
+#      expose:
+#        - ${VARNISH_PORT}
+#      environment:
+#        - VARNISH_CONFIG=${VARNISH_CONFIG}
+#        - CACHE_SIZE=${VARNISH_PROXY2_CACHE_SIZE}
+#        - VARNISHD_PARAMS=${VARNISHD_PARAMS}
+#        - VARNISH_PORT=${VARNISH_PORT}
+#        - BACKEND_HOST=${VARNISH_PROXY2_BACKEND_HOST}
+#        - BACKEND_PORT=${VARNISH_BACKEND_PORT}
+#        - VARNISH_SERVER=${VARNISH_PROXY2_SERVER}
+#      links:
+#        - workspace
+#      networks:
+#        - frontend
 
 ### HAProxy ####################################
     # haproxy:
@@ -679,18 +679,18 @@ services:
         - backend
 
 ### Solr ################################################
-    solr:
-      build:
-        context: ./solr
-        args:
-          - SOLR_VERSION=${SOLR_VERSION}
-          - SOLR_DATAIMPORTHANDLER_MYSQL=${SOLR_DATAIMPORTHANDLER_MYSQL}
-      volumes:
-        - ${DATA_PATH_HOST}/solr:/opt/solr/server/solr/mycores
-      ports:
-        - "${SOLR_PORT}:8983"
-      networks:
-        - backend
+#    solr:
+#      build:
+#        context: ./solr
+#        args:
+#          - SOLR_VERSION=${SOLR_VERSION}
+#          - SOLR_DATAIMPORTHANDLER_MYSQL=${SOLR_DATAIMPORTHANDLER_MYSQL}
+#      volumes:
+#        - ${DATA_PATH_HOST}/solr:/opt/solr/server/solr/mycores
+#      ports:
+#        - "${SOLR_PORT}:8983"
+#      networks:
+#        - backend
 
 ### AWS EB-CLI ################################################
     aws:
@@ -703,14 +703,14 @@ services:
       tty: true
 
 ### Portainer ################################################
-    portainer:
-      build:
-        context: ./portainer
-      volumes:
-        - ${DATA_PATH_HOST}/portainer_data:/data
-        - /var/run/docker.sock:/var/run/docker.sock
-      ports:
-        - 9010:9000
+#    portainer:
+#      build:
+#        context: ./portainer
+#      volumes:
+#        - ${DATA_PATH_HOST}/portainer_data:/data
+#        - /var/run/docker.sock:/var/run/docker.sock
+#      ports:
+#        - 9010:9000
 
 ### Django Container #################################
     django:
